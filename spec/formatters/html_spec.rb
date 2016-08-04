@@ -1,6 +1,6 @@
 describe Rouge::Formatters::HTML do
   let(:subject) { Rouge::Formatters::HTML.new(options) }
-  let(:options) { {} }
+  let(:options) { { :rows => false } }
   Token = Rouge::Token
 
   it 'formats a simple token stream' do
@@ -9,7 +9,7 @@ describe Rouge::Formatters::HTML do
   end
 
   describe 'skipping the wrapper' do
-    let(:options) { { :wrap => false } }
+    let(:options) { { :wrap => false, :rows => false } }
     let(:output) { subject.format([[Token['Name'], 'foo']]) }
 
     it 'skips the wrapper' do
@@ -22,7 +22,9 @@ describe Rouge::Formatters::HTML do
       style Name, :bold => true
     end
 
-    let(:options) { { :inline_theme => InlineTheme.new, :wrap => false } }
+    let(:options) {
+      { :inline_theme => InlineTheme.new, :wrap => false, :rows => false }
+    }
 
     let(:output) {
       subject.format([[Token['Name'], 'foo']])

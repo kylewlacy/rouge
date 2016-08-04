@@ -26,11 +26,14 @@ module Rouge
         @line_numbers = opts.fetch(:line_numbers, false)
         @inline_theme = opts.fetch(:inline_theme, nil)
         @wrap = opts.fetch(:wrap, true)
+        @rows = opts.fetch(:rows, true)
       end
 
       # @yield the html output.
       def stream(tokens, &b)
-        if @line_numbers
+        if @rows
+          stream_rows(tokens, &b)
+        elsif @line_numbers
           stream_tableized(tokens, &b)
         else
           stream_untableized(tokens, &b)
@@ -38,6 +41,46 @@ module Rouge
       end
 
     private
+      def stream_rows(tokens, &b)
+        num_lines = 0
+        last_val = ''
+        formatted = ''
+
+        tokens.each do |tok, val|
+          last_val = val
+          num_lines += val.scan(/\n/).size
+          span(tok, val) { |str| formatted << str }
+        end
+
+        yield "<pre class=#{@css_class.inspect}>" if @wrap
+        yield "<table><tbody>"
+
+        # the "gl" class applies the style for Generic.Lineno
+
+        formatted.split("\n").each_with_index do |line, x|
+          yield '<tr>'
+          if @line_numbers
+            yield '<td class="gutter gl">'
+            yield "#{x+1}"
+            yield '</td>'
+          end
+          yield '<td class="code">'
+          yield "#{line}"
+          yield '</td>'
+          yield '</tr>'
+        end
+
+        # generate a string of newline-separated line numbers for the gutter
+        # numbers = num_lines.times.map do |x|
+        #   %<<div class="lineno">#{x+1}</div>>
+        # end.join
+
+
+
+        yield '</tr></tbody></table>'
+        yield '</pre>' if @wrap
+      end
+
       def stream_untableized(tokens, &b)
         yield "<pre class=#{@css_class.inspect}>" if @wrap
         tokens.each do |tok, val|
