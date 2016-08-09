@@ -60,9 +60,9 @@ module Rouge
         formatted.split("\n").each_with_index do |line, x|
           yield '<tr>'
           if @line_numbers
-            yield '<td class="gutter gl">'
-            yield "#{x+1}"
-            yield '</td>'
+            # NOTE: Line numbers are output as the `data-line-number` attribute,
+            #       meaning it will require a bit of CSS to actually show up!
+            yield "<td class=\"gutter gl\" data-line-number=\"#{x+1}\"></td>"
           end
           yield '<td class="code">'
           yield "#{line}"
