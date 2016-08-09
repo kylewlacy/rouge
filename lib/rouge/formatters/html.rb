@@ -65,7 +65,13 @@ module Rouge
             yield "<td class=\"gutter gl\" data-line-number=\"#{x+1}\"></td>"
           end
           yield '<td class="code">'
-          yield "#{line}"
+
+          yield line
+
+          # Empty rows behave oddly (have no height, don't copy/paste properly),
+          # so add explicit line breaks
+          yield "<br />"
+
           yield '</td>'
           yield '</tr>'
         end
