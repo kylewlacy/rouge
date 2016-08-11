@@ -52,7 +52,7 @@ module Rouge
           span(tok, val) { |str| formatted << str }
         end
 
-        yield "<pre class=#{@css_class.inspect}>" if @wrap
+        yield "<div class=#{@css_class.inspect}>" if @wrap
         yield "<table><tbody>"
 
         # the "gl" class applies the style for Generic.Lineno
@@ -66,11 +66,7 @@ module Rouge
           end
           yield '<td class="code">'
 
-          yield line
-
-          # Empty rows behave oddly (have no height, don't copy/paste properly),
-          # so add explicit line breaks
-          yield "<br />"
+          yield "<pre>#{line}</pre>"
 
           yield '</td>'
           yield '</tr>'
@@ -84,7 +80,7 @@ module Rouge
 
 
         yield '</tr></tbody></table>'
-        yield '</pre>' if @wrap
+        yield '</div>' if @wrap
       end
 
       def stream_untableized(tokens, &b)
