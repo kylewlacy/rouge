@@ -66,7 +66,12 @@ module Rouge
           end
           yield '<td class="code">'
 
-          yield "<pre>#{line}</pre>"
+          if line.strip.empty?
+            yield '<br />'
+          else
+            yield "<pre>#{line}</pre>"
+          end
+
 
           yield '</td>'
           yield '</tr>'
